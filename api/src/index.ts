@@ -1,5 +1,12 @@
-import express from "express";
+import express, { Application } from "express";
+import tedious from "tedious";
+import { connect } from "./database/mongo";
+import routeUsers from "./routes/user-route";
+import cors from "cors";
 
+const app: Application = express();
+
+connect();
 /***********************
  * Express Middlewares *
  ***********************/
@@ -17,18 +24,24 @@ import express from "express";
  */
 
 /**
- * Middleware to let the application use Cross-Origin Resource Sharing
- * This essentially means that our website can run on a different
- * domain:port than what our API server is running at
+ * Allow the application to parse the request body data type to be a json.
+ * Before we recieve the request, we would like the data the client sent over
+ * to be in a json.
  */
-const app = express();
-const port = 3000;
+app.use(cors({ origin: true }));
+app.use(express.json());
 
-//Define request response in root URL (/)
-app.get("/", function (req, res) {
-  res.send("Hello World!");
-});
+const allowedOrigins = ["http://localhost:3000"];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins,
+};
+
+const port = process.env.port || 3000;
+const users = [];
+app.use("/api/users", routeUsers);
+
 //Launch listening server on port 3000
 app.listen(port, function () {
-  console.log("app listening on port ${port}!");
+  console.log(`app listening on port ${port}!`);
 });

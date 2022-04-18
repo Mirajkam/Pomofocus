@@ -1,0 +1,3 @@
+1. Starting Docker (redis, mongodb):
+	NOTE: remember to be in StudentHousingBoard folder
+	docker-compose -f docker-compose-dev.yml up

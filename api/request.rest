@@ -1,0 +1,14 @@
+POST "http://localhost:3000/api/users/login" 
+User-Agent: rest-client
+Accept-Language: en-GB,en-US;q=0.8,en;q=0.6,zh-CN;q=0.4
+Content-Type: application/json
+{
+    "email": "raedmirajkar@gmail.com",
+    "password": "abcd"
+}
+
+
+curl --header "Content-Type: application/json" \
+ 		 --request POST \
+  		--data '{"email":"dankajohn@gmail.com", "password":"abc"}' \
+  		http://localhost:3000/api/users/register
