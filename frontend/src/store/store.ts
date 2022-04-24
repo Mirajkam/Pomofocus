@@ -6,7 +6,11 @@ export default createStore({
     token: null,
     user: null,
   },
-  getters: {},
+  getters: {
+    user(state) {
+      return state.user;
+    },
+  },
   mutations: {
     setUser(state, user) {
       state.user = user;
