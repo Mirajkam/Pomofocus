@@ -10,7 +10,7 @@ export default {
     });
   },
 
-  register(user: User) {
+  register(user: { email: string; password: string; name: string }) {
     return axios.post("/api/users/register", user).then((response) => {
       return response.data;
     });

@@ -26,14 +26,11 @@ export class User {
   @prop({ required: true })
   password!: string;
 
-  @prop({ required: false, default: 0 })
+  @prop({ required: false, default: 0 }) //stored in seconds
   actvityTime?: number;
 
   @prop({ required: false })
-  firstName!: string;
-
-  @prop({ required: false })
-  lastName!: number;
+  name?: number;
 
   async validatePassword(candidatePassword: string) {
     try {
