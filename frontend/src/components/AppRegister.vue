@@ -1,25 +1,42 @@
 <template>
-  <v-card dark flat>
-    <v-card-title> Register </v-card-title>
+  <v-card dark class="pa-3">
+    <v-card-title class="pa-0 pb-4"> Register </v-card-title>
     <div>
       <div>
-        <v-text-field v-model="name" label="Name"> </v-text-field>
-        <v-text-field v-model="email" label="Email"> </v-text-field>
+        <v-text-field density="compact" v-model="name" label="Name">
+        </v-text-field>
+        <v-text-field density="compact" v-model="email" label="Email">
+        </v-text-field>
         <v-text-field
           v-model="password"
           hint="atleast 6 characters"
           label="Password"
-          :error-messages="doPasswordsNotMatch ? 'Passwords do not mathc' : ''"
+          density="compact"
+          :error-messages="doPasswordsNotMatch"
         >
         </v-text-field>
         <v-text-field
           v-model="confirmPassword"
           label=" Confirm Password"
-          :error-messages="doPasswordsNotMatch ? 'Passwords do not mathc' : ''"
+          density="compact"
+          :error-messages="doPasswordsNotMatch"
         >
+          <template #append><span class="text--primary"> Show </span></template>
         </v-text-field>
       </div>
-      <v-btn color="primary" @click="register"> Register </v-btn>
+      <v-btn
+        @click="register"
+        size="large"
+        color="rgb(34, 34, 34)"
+        :style="{
+          width: '100%',
+          color: 'white',
+          textTransform: 'none',
+          fontWeight: '400',
+        }"
+      >
+        Register
+      </v-btn>
     </div>
   </v-card>
 </template>
@@ -32,35 +49,35 @@ export default defineComponent({
     return {
       name: "",
       email: "",
+      user: null,
       password: "",
       confirmPassword: "",
+      passwordMatch: false,
     };
   },
   computed: {
-    loggedIn(): string {
-      return `${this.user} has logged in`;
-    },
-    doPasswordsNotMatch(): boolean {
-      return this.password !== this.confirmPassword;
+    doPasswordsNotMatch(): string {
+      return this.passwordMatch ? "Passwords do not match" : "";
     },
   },
   methods: {
     register() {
-      AuthorizationService.register({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-      }).then((response) => {
-        console.log(response);
-        this.$store.dispatch("setToken", response.token);
-        this.$store.dispatch("setUser", response.user);
-        this.user = response.user.email;
-        console.log(this.$store.state.user.email);
-      });
-    },
-
-    switchLoginMode(mode) {
-      this.loginMode = mode;
+      if (this.password === this.confirmPassword) {
+        this.passwordMatch = false;
+        AuthorizationService.register({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        }).then((response) => {
+          console.log(response);
+          this.$store.dispatch("setToken", response.token);
+          this.$store.dispatch("setUser", response.user);
+          this.user = response.user.email;
+          console.log(this.$store.state.user.email);
+        });
+      } else {
+        this.passwordMatch = true;
+      }
     },
   },
 });

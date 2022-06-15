@@ -1,3 +1,12 @@
 1. Starting Docker (redis, mongodb):
 	NOTE: remember to be in StudentHousingBoard folder
 	docker-compose -f docker-compose-dev.yml up
+
+
+2.Starting api server
+	-cd api
+	-npm run devStart
+
+3.Starting frontend server
+	-cd frontend
+	-npm run serve (starts frontend server)

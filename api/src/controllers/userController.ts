@@ -60,11 +60,18 @@ export default class UserController {
         expiresIn: "24h",
       });
       // save user token
-      return _res.status(200).json({ token: token, user: user.toJSON() });
+      return _res
+        .status(200)
+        .json({ token: token, user: user.toJSON(), status: 200 });
     } else {
+      console.log(401);
       return _res
         .status(401)
-        .json({ success: false, status: 401, message: "Invalid credentials" });
+        .json({
+          success: false,
+          status: 401,
+          message: "Invalid credentials, password or username is incorrect",
+        });
     }
   }
 }
