@@ -6,21 +6,32 @@
     >
     <div class="app_divider"></div>
     <v-card-title class="pl-0"> Sign-In </v-card-title>
-    <div class="loginCard__divider">Or</div>
+
     <div class="loginCard__mainPanel">
       <div>
+        <span class="loginCard__label"> Email </span>
         <v-text-field
           density="default"
           v-model="email"
           label="Login"
-          :error-messages="emailValidationError"
+          :error-messages="
+            isEmptyEmail === ''
+              ? 'email cannot be empty'
+              : '' || emailValidationError
+          "
         >
         </v-text-field>
+        <span class="loginCard__label"> Password </span>
         <v-text-field
           density="default"
           outlined
           v-model="password"
           label="Password"
+          :error-messages="
+            isEmptyEmail === ''
+              ? 'email cannot be empty'
+              : '' || emailValidationError
+          "
         >
         </v-text-field>
       </div>
@@ -73,6 +84,7 @@ export default defineComponent({
       password: "",
       user: "",
       isInvalidEmail: false,
+      isEmptyEmail: false,
       loginError: false,
       loginErrorMessage: "",
     };
@@ -85,6 +97,10 @@ export default defineComponent({
     emailValidationError(): string {
       return this.isInvalidEmail ? "Please enter a valid email address" : "";
     },
+
+    isEmptyCredentials(): boolean {
+      return !(this.email && this.password);
+    },
   },
   methods: {
     login(): void {
@@ -95,6 +111,7 @@ export default defineComponent({
         .then((response) => {
           this.$store.dispatch("setToken", response.token);
           this.$store.dispatch("setUser", response.user);
+          localStorage.setItem("user", response.token);
           this.$router.push({ name: "home" });
 
           console.log(this.$store.state.user);
@@ -125,13 +142,16 @@ export default defineComponent({
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
 
-      console.log(this.isInvalidEmail);
-      if (!this.isInvalidEmail) {
+      if (!this.isInvalidEmail && !this.isEmptyCredentials) {
         this.login();
+        this.isEmptyEmail = false;
+      }
+      {
+        this.isEmptyEmail = true;
       }
     },
 
-    setLoginAlert(mssg, show): void {
+    setLoginAlert(mssg: string, show: boolean): void {
       this.loginErrorMessage = mssg;
       this.loginError = show;
     },
@@ -184,5 +204,17 @@ export default defineComponent({
   left: 5%;
   width: 90%;
   bottom: 2.5%;
+}
+
+.loginCard__label {
+  padding: 8px 4px 4px 0px;
+  font-weight: 550;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-family: "ArialRounded", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+
+  color: rgb(196, 196, 196);
 }
 </style>
