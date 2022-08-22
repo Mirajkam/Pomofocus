@@ -5,7 +5,7 @@ export default function axiosCreate() {
   return axios.create({
     baseURL: `http://localhost:3000`,
     headers: {
-      Authorization: `Bearer ${store.state.token}`,
+      Authorization: `Bearer ${store.state.jwtSessionToken}`,
     },
   });
 }
